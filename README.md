@@ -1,2 +1,2 @@
 # CPU-SCHEDULERS
-Scheduling algorithms simulation
+- Scheduling algorithms simulation
