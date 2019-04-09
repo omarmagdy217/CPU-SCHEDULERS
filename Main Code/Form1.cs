@@ -44,32 +44,37 @@ namespace CPU_SCHEDULERS
         {
             if (button1.Text == "Generate")
             {
-                button1.Text = "Clear";
-                label7.Visible = true;
-                label9.Visible = true;
-                label10.Visible = true;
-                label11.Visible = true;
                 size = Int32.Parse(textBox1.Text);
                 int[] at = new int[size];
                 int[] bt = new int[size];
                 int[] st = new int[size + 1];
                 int[] ps = new int[size];
+                IList<int> stp = new List<int>();
+                IList<int> psp = new List<int>();
                 int[] prio = new int[size];
                 foreach (Control c in tableLayoutPanel2.Controls)
                 {
                     if (c is TextBox)
                     {
-                        ps[process_no - 1] = process_no;
-                        if (tableLayoutPanel2.GetColumn(c) == 0)
+                        TextBox txt = (TextBox)c;
+                        if (String.IsNullOrEmpty(txt.Text))
                         {
-                            TextBox txt = (TextBox)c;
-                            at[process_no - 1] = Int32.Parse(txt.Text);
+                            process_no = 1;
+                            MessageBox.Show("Please fill all the fields");
+                            return;
                         }
-                        else if (tableLayoutPanel2.GetColumn(c) == 1)
+                        else
                         {
-                            TextBox txt = (TextBox)c;
-                            bt[process_no - 1] = Int32.Parse(txt.Text);
-                            process_no++;
+                            ps[process_no - 1] = process_no;
+                            if (tableLayoutPanel2.GetColumn(c) == 0)
+                            {
+                                at[process_no - 1] = Int32.Parse(txt.Text);
+                            }
+                            else if (tableLayoutPanel2.GetColumn(c) == 1)
+                            {
+                                bt[process_no - 1] = Int32.Parse(txt.Text);
+                                process_no++;
+                            }
                         }
                     }
                 }
@@ -98,18 +103,21 @@ namespace CPU_SCHEDULERS
                 {
                     for (int i = 1; i < tableLayoutPanel3.Controls.Count; i++)
                     {
-                        prio[i - 1] = Int32.Parse(tableLayoutPanel3.Controls[i].Text);
+                        if (String.IsNullOrEmpty(tableLayoutPanel3.Controls[i].Text))
+                        {
+                            process_no = 1;
+                            MessageBox.Show("Please fill all the fields");
+                            return;
+                        }
+                        else
+                            prio[i - 1] = Int32.Parse(tableLayoutPanel3.Controls[i].Text);
                     }
                     if (radioButton1.Checked)
-                    {
-
-                    }
+                        PRIORITY.prioritySortPreemptive(size, at, bt, prio, ps, stp, psp);
                     else if (radioButton2.Checked)
-                    {
-                        PRIORITY.prioritySort(size, at, bt, prio, st, ps);
-                        averageWT = PRIORITY.avgWaiting(size, at, st);
-                        averageTAT = PRIORITY.avgTurnAround(size, at, st);
-                    }
+                        PRIORITY.prioritySortNonPreemptive(size, at, bt, prio, st, ps);
+                    averageWT = PRIORITY.avgWaiting(size, at, st);
+                    averageTAT = PRIORITY.avgTurnAround(size, at, st);
                 }
                 else if (scheduler == "ROUND ROBIN")
                 {
@@ -120,18 +128,40 @@ namespace CPU_SCHEDULERS
                     averageWT = ROUND_ROBIN.avgWaiting(size, at, st);
                     averageTAT = ROUND_ROBIN.avgTurnAround(size, at, st); */
                 }
+                button1.Text = "Clear";
+                label7.Visible = true;
+                label9.Visible = true;
+                label10.Visible = true;
+                label11.Visible = true;
                 label10.Text = averageWT.ToString();
                 label11.Text = averageTAT.ToString();
-                for (int i = 0; i <= size; i++)
+                string str;
+                if ((scheduler == "SJF" || scheduler == "PRIORITY") && radioButton1.Checked)   //Preemptive
                 {
-                    string str;
-                    str = st[i].ToString();
-                    var Label1 = new Label { BackColor = Color.White, Text = str, AutoSize = true };
-                    tableLayoutPanel4.Controls.Add(Label1, i /* Column Index */, 1 /* Row index */);
-                    if (i != size)
+                    for (int i = 0; i <= psp.Count; i++)
                     {
-                        var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + ps[i] };
-                        tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                        str = stp[i].ToString();
+                        var Label1 = new Label { BackColor = Color.White, Text = str, AutoSize = true };
+                        tableLayoutPanel4.Controls.Add(Label1, i /* Column Index */, 1 /* Row index */);
+                        if (i != psp.Count)
+                        {
+                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + psp[i] };
+                            tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i <= size; i++)
+                    {
+                        str = st[i].ToString();
+                        var Label1 = new Label { BackColor = Color.White, Text = str, AutoSize = true };
+                        tableLayoutPanel4.Controls.Add(Label1, i /* Column Index */, 1 /* Row index */);
+                        if (i != size)
+                        {
+                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + ps[i] };
+                            tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                        }
                     }
                 }
             }
