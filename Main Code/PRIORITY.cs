@@ -45,6 +45,8 @@ namespace CPU_SCHEDULERS
                 temp.bt = bt[i];
                 temp.priority = prio[i];
                 pr.Add(temp);
+                if (at[i] < t_sum)
+                    t_sum = at[i];
             }
             sortList(pr);
             while (pr.Count > 0)
@@ -96,6 +98,8 @@ namespace CPU_SCHEDULERS
                 temp.bt = bt[i];
                 temp.priority = prio[i];
                 pr.Add(temp);
+                if (at[i] < t_sum)
+                    t_sum = at[i];
             }
             sortList(pr);
             while (pr.Count > 0)
@@ -152,7 +156,7 @@ namespace CPU_SCHEDULERS
             stp.Add(t_sum);
         }
 
-        public static float avgWaiting(int size, int[] at, int[] st)
+        public static float avgWaitingNonPreemptive(int size, int[] at, int[] st)
         {
             float wt = 0;
             for (int j = 0; j < size; j++)
@@ -163,7 +167,7 @@ namespace CPU_SCHEDULERS
             return wt;
         }
 
-        public static float avgTurnAround(int size, int[] at, int[] st)
+        public static float avgTurnAroundNonPreemptive(int size, int[] at, int[] st)
         {
             float tat = 0;
             for (int k = 0; k < size; k++)
@@ -172,6 +176,39 @@ namespace CPU_SCHEDULERS
             }
             tat /= (float)size;
             return tat;
+        }
+
+        public static float avgWaitingPreemptive(int size, int[] at, int[] bt, IList<int> stp, IList<int> psp)
+        {
+            float wt_sum = 0;
+            int[] wt = new int[size];
+            for (int j = 0; j < psp.Count; j++)
+            {
+                wt[psp[j] - 1] = stp[j + 1] - at[psp[j] - 1] - bt[psp[j] - 1];
+            }
+            for (int k = 0; k < size; k++)
+            {
+                wt_sum += wt[k];
+            }
+            wt_sum /= (float)size;
+            return wt_sum;
+        }
+
+        public static float avgTurnAroundPreemptive(int size, int[] at, IList<int> stp, IList<int> psp)
+        {
+            float tat_sum = 0;
+            int[] tat = new int[size];
+            for (int j = 0; j < psp.Count; j++)
+            {
+                tat[psp[j]-1] = stp[j+1] - at[psp[j]-1];
+            }
+            for (int k = 0; k < size; k++)
+            {
+
+                tat_sum += tat[k];
+            }
+            tat_sum /= (float)size;
+            return tat_sum;
         }
     }
 }

@@ -44,6 +44,21 @@ namespace CPU_SCHEDULERS
         {
             if (button1.Text == "Generate")
             {
+                if (comboBox1.SelectedItem == null)
+                {
+                    MessageBox.Show("Please select a scheduler");
+                    return;
+                }
+                else if (String.IsNullOrEmpty(textBox1.Text))
+                {
+                    MessageBox.Show("Please enter no. of processes");
+                    return;
+                }
+                else if (tableLayoutPanel2.Controls.Count == 2)
+                {
+                    MessageBox.Show("Please customize the scheduler");
+                    return;
+                }
                 size = Int32.Parse(textBox1.Text);
                 int[] at = new int[size];
                 int[] bt = new int[size];
@@ -113,11 +128,17 @@ namespace CPU_SCHEDULERS
                             prio[i - 1] = Int32.Parse(tableLayoutPanel3.Controls[i].Text);
                     }
                     if (radioButton1.Checked)
+                    {
                         PRIORITY.prioritySortPreemptive(size, at, bt, prio, ps, stp, psp);
+                        averageWT = PRIORITY.avgWaitingPreemptive(size, at, bt, stp, psp);
+                        averageTAT = PRIORITY.avgTurnAroundPreemptive(size, at, stp, psp);
+                    }
                     else if (radioButton2.Checked)
+                    {
                         PRIORITY.prioritySortNonPreemptive(size, at, bt, prio, st, ps);
-                    averageWT = PRIORITY.avgWaiting(size, at, st);
-                    averageTAT = PRIORITY.avgTurnAround(size, at, st);
+                        averageWT = PRIORITY.avgWaitingNonPreemptive(size, at, st);
+                        averageTAT = PRIORITY.avgTurnAroundNonPreemptive(size, at, st);
+                    }
                 }
                 else if (scheduler == "ROUND ROBIN")
                 {
