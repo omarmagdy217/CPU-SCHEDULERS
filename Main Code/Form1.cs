@@ -166,7 +166,8 @@ namespace CPU_SCHEDULERS
                         tableLayoutPanel4.Controls.Add(Label1, i /* Column Index */, 1 /* Row index */);
                         if (i != psp.Count)
                         {
-                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + psp[i] };
+                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + psp[i], AutoSize = true  };
+                            Label2.Font = new Font("Arial", 12, FontStyle.Bold);
                             tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
                         }
                     }
@@ -180,7 +181,8 @@ namespace CPU_SCHEDULERS
                         tableLayoutPanel4.Controls.Add(Label1, i /* Column Index */, 1 /* Row index */);
                         if (i != size)
                         {
-                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + ps[i] };
+                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + ps[i], AutoSize = true  };
+                            Label2.Font = new Font("Arial", 12, FontStyle.Bold);
                             tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
                         }
                     }
