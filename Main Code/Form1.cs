@@ -17,6 +17,7 @@ namespace CPU_SCHEDULERS
         private float averageWT;
         private string scheduler;
         private int size;
+        private int time;
         private int Quantum;
         public Form1()
         {
@@ -78,6 +79,12 @@ namespace CPU_SCHEDULERS
                             MessageBox.Show("Please fill all the fields");
                             return;
                         }
+                        else if (!int.TryParse(txt.Text, out time))
+                        {
+                            process_no = 1;
+                            MessageBox.Show("Please enter numbers only");
+                            return;
+                        }
                         else
                         {
                             ps[process_no - 1] = process_no;
@@ -95,10 +102,10 @@ namespace CPU_SCHEDULERS
                 }
                 if (scheduler == "FCFS")
                 {
-                    FCFS.averageTime(size, bt, at, ref averageWT, ref averageTAT);
+                    FCFS.averageTime(ps, size, bt, at, ref averageWT, ref averageTAT);
                     label10.Text = averageWT.ToString();
                     label11.Text = averageTAT.ToString();
-                    FCFS.GanttView(size, at, bt, st);
+                    FCFS.GanttView(size, at, bt, st, ps, stp, psp);
                 }
                 else if (scheduler == "SJF")
                 {
@@ -157,7 +164,7 @@ namespace CPU_SCHEDULERS
                 label10.Text = averageWT.ToString();
                 label11.Text = averageTAT.ToString();
                 string str;
-                if ((scheduler == "SJF" || scheduler == "PRIORITY") && radioButton1.Checked)   //Preemptive
+                if (((scheduler == "SJF" || scheduler == "PRIORITY") && radioButton1.Checked) || scheduler == "FCFS")   //Preemptive
                 {
                     for (int i = 0; i <= psp.Count; i++)
                     {
@@ -166,9 +173,19 @@ namespace CPU_SCHEDULERS
                         tableLayoutPanel4.Controls.Add(Label1, i /* Column Index */, 1 /* Row index */);
                         if (i != psp.Count)
                         {
-                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + psp[i], AutoSize = true, Padding = new Padding(20, 0, 20, 0) };
+                            int pad = 10*(stp[i + 1] - stp[i]);
+                            var Label2 = new Label { BackColor = Color.Orange, AutoSize = true, Padding = new Padding(pad, 0, pad, 0) };
                             Label2.Font = new Font("Arial", 12, FontStyle.Bold);
-                            tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                            if (psp[i] == 0)
+                            {
+                                Label2.Text = "IDLE";
+                                tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                            }
+                            else
+                            {
+                                Label2.Text = "Process " + psp[i];
+                                tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                            }
                         }
                     }
                 }
@@ -181,8 +198,7 @@ namespace CPU_SCHEDULERS
                         tableLayoutPanel4.Controls.Add(Label1, i /* Column Index */, 1 /* Row index */);
                         if (i != size)
                         {
-                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + ps[i], AutoSize = true  };
-                            Label2.Font = new Font("Arial", 12, FontStyle.Bold);
+                            var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + ps[i] };
                             tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
                         }
                     }
@@ -198,10 +214,7 @@ namespace CPU_SCHEDULERS
                 label11.Text = "";
                 //label10.Visible = false;
                 //label11.Visible = false;
-                while (tableLayoutPanel4.Controls.Count > 0)
-                {
-                    tableLayoutPanel4.Controls[0].Dispose();
-                }
+                tableLayoutPanel4.Controls.Clear();
             }
         }
 
