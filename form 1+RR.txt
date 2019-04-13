@@ -17,6 +17,7 @@ namespace CPU_SCHEDULERS
         private float averageWT;
         private string scheduler;
         private int size;
+        private int time;
         private int Quantum;
         public Form1()
         {
@@ -44,97 +45,155 @@ namespace CPU_SCHEDULERS
         {
             if (button1.Text == "Generate")
             {
-                button1.Text = "Clear";
-                label7.Visible = true;
-                label9.Visible = true;
-                label10.Visible = true;
-                label11.Visible = true;
+                if (comboBox1.SelectedItem == null)
+                {
+                    MessageBox.Show("Please select a scheduler");
+                    return;
+                }
+                else if (String.IsNullOrEmpty(textBox1.Text))
+                {
+                    MessageBox.Show("Please enter no. of processes");
+                    return;
+                }
+                else if (tableLayoutPanel2.Controls.Count == 2)
+                {
+                    MessageBox.Show("Please customize the scheduler");
+                    return;
+                }
                 size = Int32.Parse(textBox1.Text);
                 int[] at = new int[size];
                 int[] bt = new int[size];
                 int[] st = new int[size + 1];
                 int[] ps = new int[size];
+                IList<int> stp = new List<int>();
+                IList<int> psp = new List<int>();
+                List<process> arr = new List<process>();
                 int[] prio = new int[size];
                 foreach (Control c in tableLayoutPanel2.Controls)
                 {
                     if (c is TextBox)
                     {
-                        ps[process_no - 1] = process_no;
-                        if (tableLayoutPanel2.GetColumn(c) == 0)
+                        TextBox txt = (TextBox)c;
+                        if (String.IsNullOrEmpty(txt.Text))
                         {
-                            TextBox txt = (TextBox)c;
-                            at[process_no - 1] = Int32.Parse(txt.Text);
+                            process_no = 1;
+                            MessageBox.Show("Please fill all the fields");
+                            return;
                         }
-                        else if (tableLayoutPanel2.GetColumn(c) == 1)
+                        else if (!int.TryParse(txt.Text, out time))
                         {
-                            TextBox txt = (TextBox)c;
-                            bt[process_no - 1] = Int32.Parse(txt.Text);
-                            process_no++;
+                            process_no = 1;
+                            MessageBox.Show("Please enter numbers only");
+                            return;
+                        }
+                        else
+                        {
+                            ps[process_no - 1] = process_no;
+                            if (tableLayoutPanel2.GetColumn(c) == 0)
+                            {
+                                at[process_no - 1] = Int32.Parse(txt.Text);
+                            }
+                            else if (tableLayoutPanel2.GetColumn(c) == 1)
+                            {
+                                bt[process_no - 1] = Int32.Parse(txt.Text);
+                                process_no++;
+                            }
                         }
                     }
                 }
                 if (scheduler == "FCFS")
                 {
-                    FCFS.averageTime(size, bt, at, ref averageWT, ref averageTAT);
+                    FCFS.averageTime(ps, size, bt, at, ref averageWT, ref averageTAT);
                     label10.Text = averageWT.ToString();
                     label11.Text = averageTAT.ToString();
-                    FCFS.GanttView(size, at, bt, st);
+                    FCFS.GanttView(size, at, bt, ps, stp, psp);
                 }
                 else if (scheduler == "SJF")
                 {
                     // hna ya Sisy
                     if (radioButton1.Checked)   //Preemptive
                     {
-                        // SJF.preemptiveSort(size, at, bt, st, ps);
+                        SJF.sjf_prmptive(stp, psp, size, at, bt, ps);
                     }
                     else if (radioButton2.Checked)  // Non Preemptive
                     {
+                        SJF.sjf_nonprmptive(stp, psp, size, at, bt, ps);
                         // SJF.nonPreemptiveSort(size, at, bt, st, ps);
                     }
-                    /* averageWT = SJF.avgWaiting(size, at, st);
-                    averageTAT = SJF.avgTurnAround(size, at, st); */
+                    averageWT = TIME.avgWaiting(size, at, bt, stp, psp);
+                    averageTAT = TIME.avgTurnAround(size, at, stp, psp);
                 }
                 else if (scheduler == "PRIORITY")
                 {
                     for (int i = 1; i < tableLayoutPanel3.Controls.Count; i++)
                     {
-                        prio[i - 1] = Int32.Parse(tableLayoutPanel3.Controls[i].Text);
+                        if (String.IsNullOrEmpty(tableLayoutPanel3.Controls[i].Text))
+                        {
+                            process_no = 1;
+                            MessageBox.Show("Please fill all the fields");
+                            return;
+                        }
+                        else
+                            prio[i - 1] = Int32.Parse(tableLayoutPanel3.Controls[i].Text);
                     }
                     if (radioButton1.Checked)
-                    {
-
-                    }
+                        PRIORITY.PrioritySort(true, size, at, bt, prio, ps, stp, psp);
                     else if (radioButton2.Checked)
-                    {
-                        PRIORITY.prioritySort(size, at, bt, prio, st, ps);
-                        averageWT = PRIORITY.avgWaiting(size, at, st);
-                        averageTAT = PRIORITY.avgTurnAround(size, at, st);
-                    }
+                        PRIORITY.PrioritySort(false, size, at, bt, prio, ps, stp, psp);
+                    averageWT = TIME.avgWaiting(size, at, bt, stp, psp);
+                    averageTAT = TIME.avgTurnAround(size, at, stp, psp);
                 }
                 else if (scheduler == "ROUND ROBIN")
                 {
-                    ROUND_ROBIN.averagetime( size,  at, bt, ps , Quantum , ref averageWT, ref averageTAT , ref psp , ref stp );
-                    // hna ya Martina
-                    Quantum = Int32.Parse(textBox2.Text);
+                    if (String.IsNullOrEmpty(textBox2.Text))
+                    {
+                        process_no = 1;
+                        MessageBox.Show("Please enter time slice");
+                        return;
+                    }
+                    else if (!int.TryParse(textBox2.Text, out time))
+                    {
+                        process_no = 1;
+                        MessageBox.Show("Please enter numbers only");
+                        return;
+                    }
 
-                    /* ROUND_ROBIN.roundSort(size, at, bt, st, ps);
-                    averageWT = ROUND_ROBIN.avgWaiting(size, at, st);
-                    averageTAT = ROUND_ROBIN.avgTurnAround(size, at, st); */
+                    Quantum = Int32.Parse(textBox2.Text);
+                    ROUND_ROBIN.averagetime(size, at, bt, ps, Quantum, ref averageWT, ref averageTAT, ref psp, ref stp);
+                    //ROUND_ROBIN.RobinSort(Quantum, size, at, bt, ps, stp, psp);
+                    averageWT = TIME.avgWaiting(size, at, bt, stp, psp);
+                    averageTAT = TIME.avgTurnAround(size, at, stp, psp);
                 }
+                button1.Text = "Clear";
+                label7.Visible = true;
+                label9.Visible = true;
+                label10.Visible = true;
+                label11.Visible = true;
                 label10.Text = averageWT.ToString();
                 label11.Text = averageTAT.ToString();
-                for (int i = 0; i <= size; i++)
+                string str;
+                for (int i = 0; i <= psp.Count; i++)
                 {
-                    string str;
-                    str = st[i].ToString();
+                    str = stp[i].ToString();
                     var Label1 = new Label { BackColor = Color.White, Text = str, AutoSize = true };
                     tableLayoutPanel4.Controls.Add(Label1, i /* Column Index */, 1 /* Row index */);
-                    if (i != size)
+                    if (i != psp.Count)
                     {
-                        var Label2 = new Label { BackColor = Color.Orange, Text = "Process " + ps[i] };
-                        tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                        int pad = 10*(stp[i + 1] - stp[i]);
+                        var Label2 = new Label { BackColor = Color.Orange, AutoSize = true, Padding = new Padding(pad, 0, pad, 0) };
+                        Label2.Font = new Font("Arial", 12, FontStyle.Bold);
+                        if (psp[i] == 0)
+                        {
+                            Label2.Text = "IDLE";
+                            tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                        }
+                        else
+                        {
+                            Label2.Text = "Process " + psp[i];
+                            tableLayoutPanel4.Controls.Add(Label2, i /* Column Index */, 0 /* Row index */);
+                        }
                     }
-                }
+                }                
             }
             else if (button1.Text == "Clear")
             {
@@ -146,10 +205,7 @@ namespace CPU_SCHEDULERS
                 label11.Text = "";
                 //label10.Visible = false;
                 //label11.Visible = false;
-                while (tableLayoutPanel4.Controls.Count > 0)
-                {
-                    tableLayoutPanel4.Controls[0].Dispose();
-                }
+                tableLayoutPanel4.Controls.Clear();
             }
         }
 
