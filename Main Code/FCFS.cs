@@ -84,7 +84,7 @@ namespace CPU_SCHEDULERS
             b = (float)sumTurnaround / (float)size;
         }
 
-        public static void GanttView(int size, int[] at, int[] bt, int[] st, int[] ps, IList<int> stp, IList<int> psp)
+        public static void GanttView(int size, int[] at, int[] bt, int[] ps, IList<int> stp, IList<int> psp)
         {
             for (int i = 0; i <= size; i++)
             {
