@@ -34,3 +34,21 @@ E:\My Files\OS\CPU SCHEDULERS Live\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.cspro
 E:\My Files\OS\CPU SCHEDULERS Live\CPU SCHEDULERS\obj\Debug\CPU_SCHEDULERS.Form1.resources
 E:\My Files\OS\CPU SCHEDULERS Live\CPU SCHEDULERS\obj\Debug\CPU_SCHEDULERS.Properties.Resources.resources
 E:\My Files\OS\CPU SCHEDULERS Live\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.csproj.GenerateResource.Cache
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\bin\Debug\CPU SCHEDULERS.exe.config
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.exe
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.pdb
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\bin\Debug\CPU SCHEDULERS.exe
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\bin\Debug\CPU SCHEDULERS.pdb
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.csprojResolveAssemblyReference.cache
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\obj\Debug\CPU_SCHEDULERS.Form1.resources
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\obj\Debug\CPU_SCHEDULERS.Properties.Resources.resources
+D:\My Files\OS Schedulers\CPU SCHEDULERS LIVE\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.csproj.GenerateResource.Cache
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\bin\Debug\CPU SCHEDULERS.exe.config
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.exe
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.pdb
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.csprojResolveAssemblyReference.cache
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\obj\Debug\CPU_SCHEDULERS.Form1.resources
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\obj\Debug\CPU_SCHEDULERS.Properties.Resources.resources
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\obj\Debug\CPU SCHEDULERS.csproj.GenerateResource.Cache
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\bin\Debug\CPU SCHEDULERS.exe
+D:\My Files\OS Schedulers\CPU SCHEDULERS Edit\CPU SCHEDULERS\bin\Debug\CPU SCHEDULERS.pdb

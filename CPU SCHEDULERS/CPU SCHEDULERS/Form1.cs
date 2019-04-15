@@ -50,21 +50,6 @@ namespace CPU_SCHEDULERS
         {
             if (button1.Text == "Generate")
             {
-                /*if (comboBox1.SelectedItem == null)
-                {
-                    MessageBox.Show("Please select a scheduler");
-                    return;
-                }
-                else if (String.IsNullOrEmpty(textBox1.Text))
-                {
-                    MessageBox.Show("Please enter no. of processes");
-                    return;
-                }
-                else if (tableLayoutPanel2.Controls.Count == 2)
-                {
-                    MessageBox.Show("Please customize the scheduler");
-                    return;
-                }*/
                 size = Int32.Parse(textBox1.Text);
                 int[] at = new int[size];
                 int[] bt = new int[size];
@@ -72,7 +57,6 @@ namespace CPU_SCHEDULERS
                 int[] ps = new int[size];
                 IList<int> stp = new List<int>();
                 IList<int> psp = new List<int>();
-                List<process> arr = new List<process>();
                 int[] prio = new int[size];
                 process_no = 1;
                 foreach (Control c in tableLayoutPanel2.Controls)
@@ -128,15 +112,9 @@ namespace CPU_SCHEDULERS
                 else if (scheduler == "SJF")
                 {
                     if (radioButton1.Checked)   //Preemptive
-                    {
                         SJF.sjf_prmptive(stp, psp, size, at, bt, ps);
-                    }
                     else if (radioButton2.Checked)  // Non Preemptive
-                    {
                         SJF.sjf_nonprmptive(stp, psp, size, at, bt, ps);
-                    }
-                    averageWT = TIME.avgWaiting(size, at, bt, stp, psp);
-                    averageTAT = TIME.avgTurnAround(size, at, stp, psp);
                 }
                 else if (scheduler == "PRIORITY")
                 {
@@ -171,8 +149,6 @@ namespace CPU_SCHEDULERS
                         PRIORITY.PrioritySort(true, size, at, bt, prio, ps, stp, psp);
                     else if (radioButton2.Checked)
                         PRIORITY.PrioritySort(false, size, at, bt, prio, ps, stp, psp);
-                    averageWT = TIME.avgWaiting(size, at, bt, stp, psp);
-                    averageTAT = TIME.avgTurnAround(size, at, stp, psp);
                 }
                 else if (scheduler == "ROUND ROBIN")
                 {
@@ -181,21 +157,21 @@ namespace CPU_SCHEDULERS
                         MessageBox.Show("Please enter time slice");
                         return;
                     }
-                    if (!decimal.TryParse(textBox2.Text, out d))
+                    else if (!decimal.TryParse(textBox2.Text, out d))
                     {
-                        MessageBox.Show("Please enter numbers only");
+                        MessageBox.Show("Please enter time slice numbers only");
                         return;
                     }
                     else
                     {
                         if (!int.TryParse(textBox2.Text, out time))
                         {
-                            MessageBox.Show("Please enter integer value");
+                            MessageBox.Show("Please enter time slice integer value");
                             return;
                         }
                         else if (Int32.Parse(textBox2.Text) <= 0)
                         {
-                            MessageBox.Show("Please enter a positive non-zero value");
+                            MessageBox.Show("Please enter time slice a positive non-zero value");
                             return;
                         }
                     }
@@ -203,9 +179,9 @@ namespace CPU_SCHEDULERS
                     Quantum = Int32.Parse(textBox2.Text);
 
                     ROUND_ROBIN.RobinSort(Quantum, size, at, bt, ps, stp, psp);
-                    averageWT = TIME.avgWaiting(size, at, bt, stp, psp);
-                    averageTAT = TIME.avgTurnAround(size, at, stp, psp);
                 }
+                averageWT = TIME.avgWaiting(size, at, bt, stp, psp);
+                averageTAT = TIME.avgTurnAround(size, at, stp, psp);
                 button1.Text = "Clear";
                 label7.Visible = true;
                 label9.Visible = true;
@@ -387,6 +363,11 @@ namespace CPU_SCHEDULERS
                         MessageBox.Show("Please enter a positive value");
                         return;
                     }
+                    else if (Int32.Parse(textBox1.Text) > 200)
+                    {
+                        if (MessageBox.Show("Progrman may be irresponsive :(", "Run", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                            return;
+                    }
                 }
                 DialogResult result = DialogResult.No;
                 size = Int32.Parse(textBox1.Text);
@@ -406,7 +387,12 @@ namespace CPU_SCHEDULERS
                         else if (!String.IsNullOrEmpty(tableLayoutPanel2.Controls[2*j + 1].Text))
                             break;
                         else if (!String.IsNullOrEmpty(tableLayoutPanel3.Controls[j].Text))
-                            break;
+                        {
+                            if (scheduler == "PRIORITY")
+                                break;
+                            else
+                                tableLayoutPanel3.Controls[j].Text = "";
+                        }
                     }
                     if(j <= test)
                         result = MessageBox.Show("Clear previous values?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
