@@ -105,7 +105,7 @@ namespace CPU_SCHEDULERS
                     stp.Add(t_sum);
                     psp.Add(pr[i].pid);
                     t_sum += pr[i].bt;
-                    if(prm)
+                    if (prm)
                     {
                         atp.Add(pr[i].at);
                         if (pr[min_index].at < t_sum && i != min_index)
